@@ -88,25 +88,11 @@ for i = 1:length(a_array)
         %% solve ODE 
         [t,y] = ode23s(@(t,y)ode_CASE3_seasonality(t,y,C,P,timeS,TaSnorm),time,init, options) ; 
         
-        
-        %% record cross correlation i.e. periodictiy of solution, excluding the first little bit 
-        dHdend(j,i) = y(end,1)-y(end-1,1) ; 
-        
-        envelope(j,i) = mean(xcorr(y(:,1))) ; 
-
         %% save the associated workspace
         disp('Saving...')
         save([save_path 'params_a_' num2str(a_array(i)) '_Ta_' num2str(Ta_array(j)) '.mat'])
    
     end 
 end 
-
-%% visaulise 
-threshold = 1000 ; 
-envelope(envelope<threshold) = nan ; 
-
-
-fig = figure ; 
-pcolor(a_array,Ta_array/C.T_0, envelope), shading flat ; 
 
 %save('D:/saved_runs_mega_43/FINAL_workspace.mat')
