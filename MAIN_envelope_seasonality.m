@@ -1,11 +1,15 @@
 %% make surging envelopes of Ta and a. 
+% Y Terleth July 23
 
+% this script is a wrapper that cycles through values of yearly accumulation and yearly average temperature.
+% it computes the seasonally eveolving melt over the time vectors, and applies a solver to the three differential equations in ODE_CASE3_seaonality. 
+% output timeseries are stored in .mat files at the end of each iteration. 
 
 %% 
 close all
 clear all
 clc 
-addpath('C:\Users\Yoram\OneDrive - University of Idaho\Desktop\matlab_helpers\')
+
 
 %% PATH TO SAVE TO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 save_path = 'D:\OCT\' ; 
@@ -15,23 +19,26 @@ save_path = 'D:\OCT\' ;
 
 C = constants() ; 
 
-%% define vectors
+%% define vectors to loop over:
+% accumulation
 a_array = 0:0.1:1 ; 
+% annual average temperature
 Ta_array = -15:1:0 ; 
 
-%% define other parameters
+%% define other (fixed) parameters
+% glacier length
 l = 10e3 ; 
+% glacier slope
 slope = 1 ; 
 
-seasonal_amp = 15 ; 
+% seasonal amplitude in air temperature
+seasonal_amp = 15 ; % (deg C) 
 
-P.u1 = 10 ;              % m a-1 
+% ice velocities at which beta (surface metl fraction that reaches the bed) 
+% starts increasing (u1) and is maximal (u2)
+P.u1 = 10 ;          % m a-1 
 P.u2 = 100 ;        % m a-1
 
-
-%% normalise other parameters 
-P.l = l / C.l_0 ; 
-P.slope = slope / 1 ; 
 
 %% ODE solver parameters  
 
@@ -39,19 +46,13 @@ P.slope = slope / 1 ;
 init = [1,1,1] ; 
 
 % timespan (t1/to tend/t0) 
-time = 0:1e-3:15 ; % used to be 1e-4 timestep 
+time = 0:1e-3:15 ; % used to be 1e-4 timestep: this significantly affects runtime
 
 % solver options 
 options = odeset('RelTol',1e-6,'Stats','off','OutputFcn',[]) ;  %   @odeplot) ; % @odephas2); % @odepphas2 
 
 
-%% initialise output grid 
-dHdend = zeros(length(Ta_array),length(a_array)) ; 
-dEdend = zeros(length(Ta_array),length(a_array)) ; 
-
-envelope = nan(length(Ta_array),length(a_array)) ; 
-
-%% iterate over options 
+%% iterate over input grids
 
 for i = 1:length(a_array)
     for j = 1:length(Ta_array) 
@@ -82,7 +83,6 @@ for i = 1:length(a_array)
         T1 = max(TaConstant - C.Toffset,0) ; 
         T2 = max(TaSnorm .* C.T_0 - C.Tm,0) ;  
         DDF2 = C.DDF .* sum(T1)/sum(T2) ; 
-        
         C.DDF2 = DDF2 ; 
 
         %% solve ODE 
@@ -94,5 +94,3 @@ for i = 1:length(a_array)
    
     end 
 end 
-
-%save('D:/saved_runs_mega_43/FINAL_workspace.mat')
