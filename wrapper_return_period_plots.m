@@ -11,13 +11,10 @@
 close all
 clear all
 clc 
-addpath('C:\Users\Yoram\OneDrive - University of Idaho\Desktop\matlab_helpers\')
+addpath([pwd '\matlab_helpers\'])
 
 pathlist = {'D:/SEP/no_seasonality_B1_0/', 'D:/SEP/no_seasonality_B1_10/',...
     'D:/OCT/seasonality_B1_0/','D:/OCT/seasonality_B1_10/'} ;
-
-% {'K:/enthalpy_runs/no_seasonality_B1_0/', 'K:/enthalpy_runs/no_seasonality_B1_10/',...
-%    'K:/enthalpy_runs/seasonality_B1_0/','K:/enthalpy_runs/seasonality_B1_10/'} ; 
 
 title_list = {'no seasonality, $\beta_{1}$', 'no seasonality, $\beta_{2}$', ...
     'seasonality, $\beta_{1}$', 'seasonality, $\beta_{2}$'} ; 
@@ -26,29 +23,26 @@ fig = figure ;
 
 for plt = 1:4 
 
-%% path to draw from %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% path to draw from %
 save_path_cur = string(pathlist(plt)); %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%% define vectors
-%a_array = 0:0.1:1 ; 
-% a_A = 0:0.1:1 ;  
-% Ta_A =  -14:1:0 ; 
+%% define vectors ! this should be similar to those defined in MAIN_envelope_seasonality.m !
 a_AA = 0:0.1:1 ; 
-Ta_AA = -15:1:0 ; % -20:1:5 ; 
+Ta_AA = -15:1:0 ;
 
+% make matrix to fill in with return periods
 return_intervals = ones(length(Ta_AA),length(a_AA)) ; 
 
+% initialise legend
 leg=[] ; 
+
+% loop over grids
 for ii = 1:length(a_AA)
     for jj = 1:length(Ta_AA)
 
         
         %% select file 
-        % filename = [pwd '/seasonality_exploration_august/params_a_' num2str(a_A(ii)) '_Ta_' num2str(Ta_A(jj)) '.mat'] ; 
-        %filename = ['D:/saved_runs_mega_4/params_a_' num2str(a_A(ii)) '_Ta_' num2str(Ta_A(jj)) '.mat'] ; 
-
         filename_cur = strcat(save_path_cur, 'params_a_', num2str(a_AA(ii)), '_Ta_', num2str(Ta_AA(jj)), '.mat') ;
 
         disp(filename_cur)
@@ -76,26 +70,24 @@ for ii = 1:length(a_AA)
         [pks, idx] = findpeaks(u); 
         idx(pks/max(u)<0.1)= nan ; 
         pks(pks/max(u)<0.1)= nan ; 
-        
+
+        % remove peaks that were deemed too small
         idx = rmmissing(idx) ; 
 
+        % quantify the median return interval between remaining velocity peaks
         t_idx = t(idx).*C.t_0 ; 
         re_t = median(diff(t_idx)) ; 
         
-        %  
-
+        % optional add on, comment out if you don't mind shrinking glaciers...
+        % gets rid of the result if the long term ice thickness is < .6 of its initial value at the end of the simulation 
+        % i.e., the glacier is in a non sustainable climatic regime (upper left corner of the envelope)
         if y(end,1)/max(y(:,1)) < 0.6 
             return_intervals(jj,ii) = nan ; 
-        
-
         elseif isnan(y(end,1)/max(y(:,1))) 
-            return_intervals(jj,ii) = nan ; 
-            
+            return_intervals(jj,ii) = nan ;    
         else 
             return_intervals(jj,ii) =  re_t ; % (max(t)*C.t_0)/length(rmmissing(pks)) ; % re_t ; % 
-            
-        end 
-
+        end
 
     end 
 end 
