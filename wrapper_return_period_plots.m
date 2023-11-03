@@ -3,7 +3,15 @@
 % yoram terleth 
 % 21/08/2023
 
-%% plot speedup frequency in parameter space 
+%% plot speedup frequency of the modelled output runs in parameter space 
+% this script is to visualise the resulting surge envelopes of 4 model configuration options:
+%     - no seasonality, no runoff to the bed at zero velocity
+%     - no seasonality, 10% runoff to the bed at zero velocity
+%     - seasonality, no runoff to the bed at zero vel
+%     - seasonality, 10% runoff to the bed at zero vel
+
+% it collects the four configurations from respective folders, that should be generated each in individual with MAIN_envelope_seasonality.m
+
 
 % coding of filenames: the 10 or zero is for how much melt is let through
 % at velocity 0 ! So 10 means beta2, melt is let through
@@ -13,9 +21,12 @@ clear all
 clc 
 addpath([pwd '\matlab_helpers\'])
 
+%% input paths to model run outputs here: %%%%%%%%%%%%%%%
 pathlist = {'D:/SEP/no_seasonality_B1_0/', 'D:/SEP/no_seasonality_B1_10/',...
-    'D:/OCT/seasonality_B1_0/','D:/OCT/seasonality_B1_10/'} ;
+    'D:/OCT/seasonality_B1_0/','D:/OCT/seasonality_B1_10/'} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% titles for subplots:
 title_list = {'no seasonality, $\beta_{1}$', 'no seasonality, $\beta_{2}$', ...
     'seasonality, $\beta_{1}$', 'seasonality, $\beta_{2}$'} ; 
 
