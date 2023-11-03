@@ -1,5 +1,7 @@
 function [C] = constants() 
 
+% constants listed in table 1 in Benn et al.(2019)
+
 C.p_ice = 916 ;     % kg m-3
 C.g = 10 ;        % m s-2
 
