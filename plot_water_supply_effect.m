@@ -1,27 +1,34 @@
 %% make figure about effect of water input
+% Y Terleth Oct 23
+
+% this script is to visualise inidvidual timeseries of the 4 model configurations. Similar to wrapper_return_periods_plot.m, 
+% but with a single set of climatic parameters for each model configuration rather than showing return periods and the surge envelope. 
 
 close all 
 clearvars
 clc
 
 
-%% path to draw from %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% path list to draw from: where the model runs are stored
 save_paths = {'D:/SEP/no_seasonality_B1_0/','D:/SEP/no_seasonality_B1_10/',...
     'D:/OCT/seasonality_B1_0/','D:/OCT/seasonality_B1_10/'} ; %% 
 
+% the four cases of beta (the precentage of surface runoff to the bed at 0 ice velocity. (needed beacause this script recalculates them)
 beta_index = [0, 10, 0, 10]; 
 
+% title list
 title_list = { 'no seasonality, $\beta_{1}$', 'no seasonality, $\beta_{2}$', ...
     'seasonality, $\beta_{1}$', 'seasonality, $\beta_{2}$'} ; 
 
+% periods of time that should be shown
 xlim_zoom_array = [44,44.5; 44.7,45.2 ; 49,49.5 ; 44,44.5] ; 
+
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% define vectors
-%a_array = 0:0.1:1 ; 
-a_A =  0.6 ; % 0.1 ; 
-Ta_A = -8  ; %  -10 ; %-14:1-5 ; 
+%% define climatic (fixed) parameters
+a_A =  0.6 ; % accumulation
+Ta_A = -8  ; % annual air temp
 
 % window length for pxx smoothing 
 wl = 1e3 ; 
@@ -29,6 +36,7 @@ wl = 1e3 ;
 % make inset map or not
 inset = 0 ; 
 
+%initialise legend
 leg = [] ; 
 
 fig = figure ; 
@@ -43,9 +51,6 @@ for ii = 1:length(a_A)
 
         
         %% select file 
-        % filename = [pwd '/seasonality_exploration_august/params_a_' num2str(a_A(ii)) '_Ta_' num2str(Ta_A(jj)) '.mat'] ; 
-        %filename = ['D:/saved_runs_mega_4/params_a_' num2str(a_A(ii)) '_Ta_' num2str(Ta_A(jj)) '.mat'] ; 
-
         filename = strcat(save_path, 'params_a_', num2str(a_A(ii)), '_Ta_', num2str(Ta_A(jj)), '.mat') ;
 
         disp(filename)
@@ -63,7 +68,6 @@ for ii = 1:length(a_A)
         
         Phi = min(1,(Eplus./(y(:,1)/C.chi))) ; 
     
-    
         Q = (1/P.l)*(P.slope .* Eplus.^(C.alpha) + (Phi .* P.slope^(1/2) .* y(:,3).^(4/3))) ; 
 
         % this time with seasonality 
@@ -72,7 +76,6 @@ for ii = 1:length(a_A)
         catch 
             Ta_plot = ones(length(t),1) * Ta_A ; 
         end 
-
 
         % melt %% !! C.DDF2 implements the concentration of all the melt to
         % only when air temperature is >0 deg C! 
@@ -108,12 +111,6 @@ for ii = 1:length(a_A)
 
         % velocity 
         plot(t*C.t_0,u/max(u),'LineWidth',2,Color=[0.4660 0.6740 0.1880])
-        % find velocity peaks: they need to be at least 30% of the maximal
-        % velocities.
-%         [pks, idx] = findpeaks(u); 
-%         pks(pks/max(u)<0.3)= nan ; 
-%         idx(pks/max(u)<0.3)= nan ; 
-%         scatter(t(idx)*C.t_0,pks/max(u))
 
         % N 
         plot(t*C.t_0,N/max(N),'LineWidth',2,Color=[0.9290 0.6940 0.1250])
@@ -138,28 +135,18 @@ for ii = 1:length(a_A)
 
         if p_nb == length(save_paths)
           xlabel('time (years)',Interpreter='latex')  
-%         else
-%             h_cur = gca;
-%             h_cur.XAxis.Visible = 'off';
         end 
 
-        
 
         if p_nb == 1
         legend('surf m','bed m','$\beta$', 'E', 'u', 'N', 'S', 'Q','H', Interpreter='latex',Location='SouthWest')
-        end 
-
-        %set(gca,'YScale','log')
-        %legend('melt', 'enthalpy', 'ice velocity', 'effective pressure', 'channel size', 'discharge')
-
-        
+        end         
 
         title(title_list(p_nb),Interpreter='latex',FontWeight='bold')      
 
         nexttile([1,1])
 
         xlims_zoom = xlim_zoom_array(p_nb,:) ;
-        
         
         % melt 
         plot(t*C.t_0,m_plot/max(m_plot),'--'), hold on 
@@ -172,12 +159,6 @@ for ii = 1:length(a_A)
 
         % velocity 
         plot(t*C.t_0,u/max(u),'LineWidth',2,Color=[0.4660 0.6740 0.1880])
-        % find velocity peaks: they need to be at least 30% of the maximal
-        % velocities.
-%         [pks, idx] = findpeaks(u); 
-%         pks(pks/max(u)<0.3)= nan ; 
-%         idx(pks/max(u)<0.3)= nan ; 
-%         scatter(t(idx)*C.t_0,pks/max(u))
 
         % N 
         plot(t*C.t_0,N/max(N),'LineWidth',2,Color=[0.9290 0.6940 0.1250])
@@ -188,7 +169,6 @@ for ii = 1:length(a_A)
 
         % Q 
         plot(t*C.t_0,Q/max(Q),'LineWidth',2,Color=[0.8500 0.3250 0.0980])
-
         
         % H 
         H = y(:,1) ; 
@@ -211,7 +191,6 @@ for ii = 1:length(a_A)
 
     end 
 end 
-
 
 end 
 
