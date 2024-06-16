@@ -1,17 +1,19 @@
 function [C] = constants() 
 
-% constants listed in table 1 in Benn et al.(2019)
+% this function lists all the original constants, as they are defined in
+% Benn et al. 2019. - a lot of these will be redefined in
+% adjust_constants.m
 
-C.p_ice = 916 ;     % kg m-3
-C.g = 10 ;        % m s-2
+C.p_ice = 916 ;                                                             % kg m-3
+C.g = 10 ;                                                                  % m s-2
 
-C.sin_theta = 0.05 ;    % sin(bed slope)
+C.sin_theta = 0.05 ;                                                        % sin(bed slope)
 
-C.Lf = 3.3e5 ;      % J kg-1
+C.Lf = 3.3e5 ;                                                              % J kg-1
 
-C.Cp = 2000 ;       % K kg-1 K-1
-C.k =  2.1 ;        % W m-1 K-1
-C.G = 0.06 ;        %  W m-2
+C.Cp = 2000 ;                                                               % K kg-1 K-1
+C.k =  2.1 ;                                                                % W m-1 K-1
+C.G = 0.06 ;                                                                %  W m-2
 C.d = 10 ;          % m 
 
 C.n = 3 ;           % 
