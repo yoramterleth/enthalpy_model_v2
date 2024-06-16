@@ -1,6 +1,6 @@
 # enthalpy_model_v2
 
-This is a matlab version of the enthalpy based numerical model simulating glaciers surges presented in Benn et al. (2019). It includes an additional feature forcing seasonality in the evolution of surface air temperature, implementing seasonality within the model. The code also focusses on evaluating the impact of changing supply and drainage volumes to the subglacial drainage system, rather than the climatic conditions around the glacier. 
+This is a matlab version of the enthalpy based numerical model simulating glaciers surges presented in Benn et al. (2019) (doi:10.1017/jog.2019.62). It includes an additional feature forcing seasonality in the evolution of surface air temperature, implementing seasonality within the model. The code also focusses on evaluating the impact of changing supply and drainage volumes to the subglacial drainage system, rather than the climatic conditions around the glacier. 
 
 * **MAIN_envelope.m** is the wrapper script that runs the model, iterating through parameter combinations.
 * **ode_MAIN.m** contains 4 ordinary differential equation and is given to the solver.
