@@ -1,4 +1,4 @@
-# enthalpy_model_v2
+# enthalpy_model - version implemented for Terleth et al. (2024)
 
 This is a matlab version of the enthalpy based numerical model simulating glaciers surges presented in Benn et al. (2019) (doi:10.1017/jog.2019.62). It includes an additional feature forcing seasonality in the evolution of surface air temperature, implementing seasonality within the model. The code also focusses on evaluating the impact of changing supply and drainage volumes to the subglacial drainage system, rather than the climatic conditions around the glacier. 
 
